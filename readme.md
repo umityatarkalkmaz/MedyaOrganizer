@@ -66,6 +66,19 @@ olabileceği için script şunları uygular:
 - setuid/setgid/sticky bitleri kopyaya taşınmaz; izinlerin yalnızca alt 9 biti korunur.
 - Dosya adlarındaki kontrol karakterleri log ve rapor çıktısında kaçışlanır.
 
+## Bilinen sorunlar
+
+Bu sürüm bakım modunda; aktif geliştirme Rust yeniden yazımında sürüyor. Aşağıdaki
+davranışlar bilinçli olarak burada bırakıldı, Rust sürümünde düzeltildi. Katkı
+vermek isteyen biri için açık duruyorlar.
+
+| Sorun | Ayrıntı |
+|---|---|
+| Yalnızca Unix'te çalışır | Güvenlik modeli `os.O_NOFOLLOW` üzerine kurulu ve bu sabit Windows'ta bulunmuyor; orada ilk dosyada `AttributeError` ile çöker. Docstring'deki "cross-platform" ifadesi bu yüzden yanlış. |
+| Hata durumunda çıkış kodu 0 | `--output` ile `--source` aynı verildiğinde hata loglanıp `return` ediliyor, ancak süreç yine 0 dönüyor. Script içinden çağrıldığında hata sessizce başarı sayılır. |
+| `--move` altında yinelenenler kaynakta kalır | Yinelenen dosya atlanıyor ve rapora yazılıyor, ama kaynaktan silinmiyor. Taşıma modunda kaynak dizinde birikirler. |
+| Interaktif prompt'ta EOF | `--mode` verilmeden boru hattında çalıştırılırsa `input()` yakalanmamış `EOFError` fırlatır ve traceback basar. |
+
 ## Gereksinimler
 
 - Python 3.10+ (yalnızca standart kütüphane)
